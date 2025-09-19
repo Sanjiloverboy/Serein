@@ -1,0 +1,259 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Serene Mental Wellness App Design System - Calming & Therapeutic Colors */
+
+@layer base {
+  :root {
+    /* Dark Mode - Modern dark theme with calming colors */
+    --background: 210 25% 13%;
+    --foreground: 216 33% 91%;
+
+    /* Card components */
+    --card: 210 22% 22%;
+    --card-foreground: 216 33% 91%;
+
+    /* Popover components */
+    --popover: 210 22% 22%;
+    --popover-foreground: 216 33% 91%;
+
+    /* Primary - Vibrant teal/cyan accent */
+    --primary: 180 62% 55%;
+    --primary-foreground: 210 25% 13%;
+    --primary-light: 180 62% 65%;
+    --primary-dark: 180 62% 45%;
+
+    /* Secondary - Muted secondary actions */
+    --secondary: 210 20% 30%;
+    --secondary-foreground: 216 33% 91%;
+    --secondary-light: 210 20% 35%;
+    --secondary-dark: 210 20% 25%;
+
+    /* Muted elements */
+    --muted: 210 20% 25%;
+    --muted-foreground: 216 20% 70%;
+
+    /* Accent - Complementary accent color */
+    --accent: 160 50% 50%;
+    --accent-foreground: 210 25% 13%;
+    --accent-light: 160 50% 60%;
+    --accent-dark: 160 50% 40%;
+
+    /* Success - Soft green */
+    --success: 140 40% 50%;
+    --success-foreground: 216 33% 91%;
+
+    /* Warning - Gentle amber */
+    --warning: 45 75% 60%;
+    --warning-foreground: 210 25% 13%;
+
+    /* Destructive - Muted red */
+    --destructive: 0 50% 55%;
+    --destructive-foreground: 216 33% 91%;
+
+    /* UI elements */
+    --border: 210 20% 35%;
+    --input: 210 25% 18%;
+    --ring: 180 62% 55%;
+
+    --radius: 1rem;
+
+    /* Gradients for depth and visual interest */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--primary-light))
+    );
+    --gradient-secondary: linear-gradient(
+      135deg,
+      hsl(var(--secondary)),
+      hsl(var(--secondary-light))
+    );
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(var(--accent)),
+      hsl(var(--accent-light))
+    );
+    --gradient-background: linear-gradient(
+      135deg,
+      hsl(var(--background)),
+      hsl(220 25% 96%)
+    );
+    --gradient-card: linear-gradient(
+      135deg,
+      hsl(var(--card)),
+      hsl(220 30% 96%)
+    );
+
+    /* Shadows for depth */
+    --shadow-soft: 0 4px 20px -4px hsl(var(--primary) / 0.1);
+    --shadow-medium: 0 8px 30px -8px hsl(var(--primary) / 0.15);
+    --shadow-strong: 0 12px 40px -12px hsl(var(--primary) / 0.2);
+
+    /* Animation variables */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode - Soft, warm dark tones */
+    --background: 220 20% 8%;
+    --foreground: 30 20% 95%;
+
+    --card: 220 20% 10%;
+    --card-foreground: 30 20% 95%;
+
+    --popover: 220 20% 10%;
+    --popover-foreground: 30 20% 95%;
+
+    --primary: 180 45% 70%;
+    --primary-foreground: 220 20% 8%;
+    --primary-light: 180 45% 80%;
+    --primary-dark: 180 45% 60%;
+
+    --secondary: 260 25% 25%;
+    --secondary-foreground: 260 30% 90%;
+    --secondary-light: 260 25% 30%;
+    --secondary-dark: 260 25% 20%;
+
+    --muted: 220 15% 20%;
+    --muted-foreground: 220 15% 70%;
+
+    --accent: 20 60% 70%;
+    --accent-foreground: 20 30% 15%;
+    --accent-light: 20 60% 80%;
+    --accent-dark: 20 60% 60%;
+
+    --success: 140 35% 60%;
+    --success-foreground: 140 30% 90%;
+
+    --warning: 45 75% 65%;
+    --warning-foreground: 45 30% 15%;
+
+    --destructive: 0 45% 60%;
+    --destructive-foreground: 0 30% 90%;
+
+    --border: 220 25% 25%;
+    --input: 220 25% 18%;
+    --ring: 180 45% 70%;
+  }
+}
+
+@layer components {
+  /* Custom button variants using the design system */
+  .btn-hero {
+    @apply bg-gradient-to-r from-primary to-primary-light text-primary-foreground font-medium px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply bg-gradient-to-r from-secondary to-secondary-light text-secondary-foreground font-medium px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300;
+  }
+
+  .btn-accent {
+    @apply bg-gradient-to-r from-accent to-accent-light text-accent-foreground font-medium px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300;
+  }
+
+  /* Card variants */
+  .card-soft {
+    @apply bg-gradient-to-br from-card to-card/50 backdrop-blur-sm rounded-3xl shadow-lg border border-border/50 p-6;
+  }
+
+  .card-floating {
+    @apply bg-gradient-to-br from-card to-card/80 backdrop-blur-md rounded-3xl shadow-xl border border-border/30 p-8 hover:shadow-2xl transition-all duration-300;
+  }
+
+  /* Animation classes */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-gentle-pulse {
+    animation: gentle-pulse 4s ease-in-out infinite;
+  }
+
+  .animate-breathing {
+    animation: breathing 5s ease-in-out infinite;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-background to-background/95 text-foreground overflow-x-hidden;
+    background-attachment: fixed;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/30;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/40 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/60;
+  }
+}
+
+/* Keyframe animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes gentle-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes breathing {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
