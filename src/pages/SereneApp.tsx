@@ -46,6 +46,8 @@ interface Message {
   text: string;
   sender: "user" | "ai";
   timestamp: Date;
+  // If true, render this message as HTML (safe: used only for our hardcoded AI templates)
+  isHtml?: boolean;
 }
 
 const SereneApp = () => {
@@ -218,21 +220,39 @@ const SereneApp = () => {
       setHasStartedChat(true);
     }
 
-    // Automated Crisis Mode detection before adding the message
+    // Automated Crisis Mode detection MUST run before any other logic
     try {
-      const riskKeywords = [
+      const crisisKeywords = [
         "suicide",
         "kill myself",
         "ending my life",
         "want to die",
         "can't go on",
-        "cant go on",
-        "end it all",
-        "take my life",
       ];
       const lower = currentMessage.toLowerCase();
-      if (riskKeywords.some((k) => lower.includes(k))) {
+      const crisisTriggered = crisisKeywords.some((k) => lower.includes(k));
+      if (crisisTriggered) {
+        // Add user's message first
+        const userMsg: Message = {
+          id: Date.now().toString(),
+          text: currentMessage,
+          sender: "user",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, userMsg]);
+        setCurrentMessage("");
+
+        // Immediately switch to crisis mode and send the exact response
         setChatMode("crisis");
+        const crisisResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          text:
+            "It sounds like you are in an immense amount of pain, and I hear you. Your safety is the most important thing. Please know that help is available and you are not alone. You can connect with someone who can support you by calling the iCall helpline at 9152987821. They are there to listen. I am here with you.",
+          sender: "ai",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, crisisResponse]);
+        return; // Stop further processing
       }
     } catch {}
 
@@ -246,7 +266,80 @@ const SereneApp = () => {
     setMessages((prev) => [...prev, newMessage]);
     setCurrentMessage("");
 
-    // Simulate AI response based on mode
+    // Hardcoded persona responses based on exact input match
+    const input = newMessage.text.trim();
+    let matchedHardcoded: string | null = null;
+
+    // Friendly Mode (default when chatMode is null)
+    if (chatMode === null) {
+      if (input === "I messed up my exam.") {
+        matchedHardcoded = `
+          <p>That sounds incredibly tough, and it's completely okay to feel disappointed after working so hard. It's a very human reaction.</p>
+          <p>Remember, our minds sometimes tell us a story that one event, like an exam, defines our entire worth. This is a common cognitive distortion called <strong>"overgeneralization"</strong>. This single result is just a data point on your journey, not your final destination.</p>
+          <p><strong>Let's try a small exercise to calm the mind:</strong> Just for a moment, place a hand on your heart, close your eyes, and take one slow, deep breath. In and out. That's it. You've just given yourself a moment of kindness.</p>
+        `;
+      } else if (input === "I feel so lonely.") {
+        matchedHardcoded = `
+          <p>Thank you for sharing that. Loneliness can feel very heavy, and it makes sense to feel this way.</p>
+          <p>Sometimes our mind whispers that we're the only one feeling like this—that's another example of a common distortion: <strong>"all-or-nothing thinking"</strong>. The truth is, feelings come and go, and you aren't alone in experiencing them.</p>
+          <p><strong>A gentle step:</strong> If you can, name one person, place, or activity that brings you a small sense of comfort. Even thinking about it begins to shift your state.</p>
+        `;
+      }
+    }
+
+    // Guide Mode
+    if (!matchedHardcoded && chatMode === "guide") {
+      if (input === "I'm so anxious about my presentation.") {
+        matchedHardcoded = `
+          <p>That feeling of anxiety before a big event is very normal; it means you care about doing well. We can use that energy.</p>
+          <p>Anxiety often comes from our thoughts racing into the future. The most effective way to counter this is to bring your focus back to the present moment.</p>
+          <p><strong>Here is a guided grounding technique:</strong> Let's try the <strong>5-4-3-2-1</strong> method. It pulls your attention back to your immediate surroundings.</p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>See:</strong> Name <strong>5 things</strong> you can see in the room.</li>
+            <li><strong>Feel:</strong> Name <strong>4 things</strong> you can feel (your feet on the floor, the chair beneath you).</li>
+            <li><strong>Hear:</strong> Name <strong>3 things</strong> you can hear.</li>
+            <li><strong>Smell:</strong> Name <strong>2 things</strong> you can smell.</li>
+            <li><strong>Taste:</strong> Name <strong>1 thing</strong> you can taste.</li>
+          </ul>
+        `;
+      } else if (input === "I feel overwhelmed with work.") {
+        matchedHardcoded = `
+          <p>That feeling of being overwhelmed is a clear signal that your mind is trying to juggle too many things at once. It's a sign to pause, not to push harder.</p>
+          <p>Often, this feeling comes from all our tasks feeling equally urgent. The key is to identify what truly needs your attention right now versus what can wait.</p>
+          <p><strong>Let's try a quick prioritizing exercise:</strong> Take out a piece of paper (or open a notepad). Write down <strong>only one thing</strong> that, if you completed it, would make you feel even a little bit better. Just one. Let's focus all our energy there.</p>
+        `;
+      }
+    }
+
+    // Mentor Mode
+    if (!matchedHardcoded && chatMode === "mentor") {
+      if (input === "I didn't get the internship I wanted.") {
+        matchedHardcoded = `
+          <p>Rejection stings, and it's important to allow yourself to feel that disappointment. Thank you for trusting me with it.</p>
+          <p>I've noticed from our past chats that you're someone who is incredibly resilient. This setback isn't a reflection of your worth, but a redirection. Great journeys often have unexpected detours.</p>
+          <p><strong>Here's a small task for your reflection:</strong> Take a moment and write down (or just think of) <strong>three skills</strong> you learned or strengthened while preparing for this internship application. Acknowledge your effort and growth—because that is what truly matters.</p>
+        `;
+      } else if (input === "I'm scared to fail.") {
+        matchedHardcoded = `
+          <p>That fear is a sign that you're about to do something brave. Truly successful people have a history of moments that looked like failures but became lessons.</p>
+          <p><strong>Micro-step:</strong> What's one tiny step you could take that feels a little less scary? Commit to something you can do in <strong>5 minutes</strong> today.</p>
+        `;
+      }
+    }
+
+    if (matchedHardcoded) {
+      const aiResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: matchedHardcoded,
+        sender: "ai",
+        timestamp: new Date(),
+        isHtml: true,
+      };
+      setMessages((prev) => [...prev, aiResponse]);
+      return; // Stop here; we handled with hardcoded response
+    }
+
+    // Fallback: Simulate AI response based on mode (existing random logic)
     setTimeout(() => {
       let responses: string[] = [];
 
@@ -1264,7 +1357,14 @@ const SereneApp = () => {
                         : {}
                     }
                   >
-                    <p className="text-sm">{message.text}</p>
+                    {message.isHtml && message.sender === "ai" ? (
+                      <div
+                        className="text-sm space-y-2"
+                        dangerouslySetInnerHTML={{ __html: message.text }}
+                      />
+                    ) : (
+                      <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                    )}
                   </div>
                 </div>
               ))}
